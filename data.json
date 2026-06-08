@@ -1,0 +1,93 @@
+{
+  "_source": "Burger components derived by differencing official In-N-Out item nutrition (in-n-out.com/menu/nutrition-info); base burgers close exactly to official totals. Fries/secret-menu items built from those same components. Items flagged estimated:true use published add-on data; cook levels are cosmetic (no nutrition change); salt levels scale sodium only.",
+  "components": {
+    "bun":     { "name": "Bun",          "group": "base",    "cal": 150, "fat": 2,  "carb": 29, "protein": 4,  "sodium": 280 },
+    "wrap":    { "name": "Lettuce Wrap",  "group": "base",    "cal": 0,   "fat": 0,  "carb": 0,  "protein": 0,  "sodium": 0,  "estimated": true },
+    "fries":   { "name": "Fries",         "group": "base",    "cal": 360, "fat": 15, "carb": 49, "protein": 6,  "sodium": 150 },
+    "patty":   { "name": "Beef Patty",    "group": "protein", "cal": 110, "fat": 8,  "carb": 0,  "protein": 10, "sodium": 180 },
+    "cheese":  { "name": "Cheese Slice",  "group": "protein", "cal": 70,  "fat": 5,  "carb": 2,  "protein": 4,  "sodium": 410 },
+    "spread":  { "name": "Spread",        "group": "sauce",   "cal": 80,  "fat": 6,  "carb": 5,  "protein": 0,  "sodium": 170 },
+    "ketchup": { "name": "Ketchup",       "group": "sauce",   "cal": 15,  "fat": 0,  "carb": 4,  "protein": 0,  "sodium": 110, "estimated": true },
+    "mustard": { "name": "Mustard",       "group": "sauce",   "cal": 5,   "fat": 0,  "carb": 0,  "protein": 0,  "sodium": 55,  "estimated": true },
+    "chiles":  { "name": "Chopped Chiles","group": "sauce",   "cal": 5,   "fat": 0,  "carb": 1,  "protein": 0,  "sodium": 100, "estimated": true },
+    "lettuce": { "name": "Lettuce",       "group": "veg",     "cal": 5,   "fat": 0,  "carb": 1,  "protein": 0,  "sodium": 5 },
+    "tomato":  { "name": "Tomato",        "group": "veg",     "cal": 10,  "fat": 0,  "carb": 2,  "protein": 1,  "sodium": 15 },
+    "onion":   { "name": "Onion (raw/sliced)", "group": "veg", "cal": 5,  "fat": 0,  "carb": 1,  "protein": 1,  "sodium": 20 },
+    "grilled_onion": { "name": "Grilled Onion", "group": "veg", "cal": 25, "fat": 1, "carb": 4, "protein": 0, "sodium": 30, "estimated": true },
+    "pickle":  { "name": "Pickles",       "group": "veg",     "cal": 5,   "fat": 0,  "carb": 1,  "protein": 0,  "sodium": 65,  "estimated": true }
+  },
+  "builder": {
+    "burger": ["bun", "patty", "cheese", "spread", "ketchup", "mustard", "chiles", "lettuce", "tomato", "onion", "grilled_onion", "pickle"],
+    "fries":  ["fries", "cheese", "spread", "grilled_onion", "chiles"]
+  },
+  "mods": {
+    "burger": [
+      { "mode": "protein" },
+      { "key": "patty",   "type": "extra", "label": "Patty" },
+      { "key": "cheese",  "type": "extra", "label": "Cheese" },
+      { "key": "spread",  "type": "both",  "label": "Spread" },
+      { "key": "lettuce", "type": "both",  "label": "Lettuce" },
+      { "key": "tomato",  "type": "both",  "label": "Tomato" },
+      { "key": "onion",   "type": "both",  "label": "Onion" },
+      { "key": "grilled_onion", "type": "add", "label": "Grilled Onion" },
+      { "key": "pickle",  "type": "add",   "label": "Pickles" },
+      { "key": "chiles",  "type": "add",   "label": "Chiles" },
+      { "key": "ketchup", "type": "add",   "label": "Ketchup" },
+      { "key": "mustard", "type": "add",   "label": "Mustard" }
+    ],
+    "fries": [
+      { "key": "cheese",  "type": "add", "label": "Cheese" },
+      { "key": "spread",  "type": "add", "label": "Spread" },
+      { "key": "grilled_onion", "type": "add", "label": "Grilled Onion" },
+      { "key": "chiles",  "type": "add", "label": "Chiles" }
+    ]
+  },
+  "presets": {
+    "hamburger":     { "name": "Hamburger",     "cat": "burger", "items": { "bun": 1, "patty": 1, "spread": 1, "lettuce": 1, "tomato": 1, "onion": 1 } },
+    "cheeseburger":  { "name": "Cheeseburger",  "cat": "burger", "items": { "bun": 1, "patty": 1, "cheese": 1, "spread": 1, "lettuce": 1, "tomato": 1, "onion": 1 } },
+    "double-double": { "name": "Double-Double", "cat": "burger", "items": { "bun": 1, "patty": 2, "cheese": 2, "spread": 1, "lettuce": 1, "tomato": 1, "onion": 1 } },
+    "3x3":           { "name": "3×3",       "cat": "burger", "items": { "bun": 1, "patty": 3, "cheese": 3, "spread": 1, "lettuce": 1, "tomato": 1, "onion": 1 } },
+    "4x4":           { "name": "4×4",       "cat": "burger", "items": { "bun": 1, "patty": 4, "cheese": 4, "spread": 1, "lettuce": 1, "tomato": 1, "onion": 1 } },
+    "protein-style": { "name": "Protein Style (Double-Double)", "cat": "burger", "items": { "wrap": 1, "patty": 2, "cheese": 2, "spread": 1, "lettuce": 1, "tomato": 1, "onion": 1 } },
+    "animal-style":  { "name": "Animal Style (Double-Double)",  "cat": "burger", "items": { "bun": 1, "patty": 2, "cheese": 2, "spread": 2, "mustard": 1, "grilled_onion": 1, "pickle": 1, "lettuce": 1, "tomato": 1 } },
+    "flying-dutchman": { "name": "Flying Dutchman", "cat": "burger", "items": { "patty": 2, "cheese": 2 } },
+    "grilled-cheese":  { "name": "Grilled Cheese",  "cat": "burger", "items": { "bun": 1, "cheese": 2, "spread": 1, "lettuce": 1, "tomato": 1, "onion": 1 } },
+    "fries":         { "name": "French Fries",       "cat": "fries", "items": { "fries": 1 } },
+    "cheese-fries":  { "name": "Cheese Fries",       "cat": "fries", "items": { "fries": 1, "cheese": 2 } },
+    "animal-fries":  { "name": "Animal Style Fries", "cat": "fries", "items": { "fries": 1, "cheese": 2, "spread": 1, "grilled_onion": 2 } }
+  },
+  "extras": {
+    "vanilla-shake":   { "name": "Vanilla Shake (15 oz)",    "cal": 590, "fat": 31, "carb": 66, "protein": 16, "sodium": 360 },
+    "chocolate-shake": { "name": "Chocolate Shake (15 oz)",  "cal": 610, "fat": 30, "carb": 74, "protein": 16, "sodium": 370 },
+    "strawberry-shake":{ "name": "Strawberry Shake (15 oz)", "cal": 610, "fat": 30, "carb": 74, "protein": 15, "sodium": 350 },
+    "neapolitan-shake":{ "name": "Neapolitan Shake (15 oz)", "cal": 610, "fat": 30, "carb": 71, "protein": 16, "sodium": 360, "estimated": true },
+    "coke":            { "name": "Coca-Cola (Sm 11 oz)",     "cal": 130, "fat": 0,  "carb": 37, "protein": 0,  "sodium": 35 },
+    "diet-coke":       { "name": "Diet Coke (Sm 11 oz)",     "cal": 0,   "fat": 0,  "carb": 0,  "protein": 0,  "sodium": 45 },
+    "cherry-coke":     { "name": "Cherry Coke (Sm 11 oz)",   "cal": 140, "fat": 0,  "carb": 38, "protein": 0,  "sodium": 40 },
+    "dr-pepper":       { "name": "Dr Pepper (Sm 11 oz)",     "cal": 130, "fat": 0,  "carb": 36, "protein": 0,  "sodium": 40 },
+    "7up":             { "name": "7UP (Sm 11 oz)",           "cal": 130, "fat": 0,  "carb": 35, "protein": 0,  "sodium": 45 },
+    "root-beer":       { "name": "Barq's Root Beer (Sm 11 oz)", "cal": 140, "fat": 0, "carb": 37, "protein": 0, "sodium": 65 },
+    "pink-lemonade":   { "name": "Pink Lemonade (Sm 11 oz)", "cal": 150, "fat": 0,  "carb": 35, "protein": 0,  "sodium": 25 },
+    "lite-lemonade":   { "name": "Lite Pink Lemonade (Sm 11 oz)", "cal": 5, "fat": 0, "carb": 3, "protein": 0, "sodium": 25 },
+    "iced-tea":        { "name": "Unsweetened Iced Tea (Sm 6 oz)", "cal": 0, "fat": 0, "carb": 0, "protein": 0, "sodium": 0 },
+    "sweet-tea":       { "name": "Sweet Iced Tea (Sm 6 oz)", "cal": 80,  "fat": 0,  "carb": 20, "protein": 0,  "sodium": 0 },
+    "coffee":          { "name": "Coffee (15 oz)",           "cal": 0,   "fat": 0,  "carb": 0,  "protein": 0,  "sodium": 0 },
+    "hot-cocoa":       { "name": "Hot Cocoa (8 oz)",         "cal": 160, "fat": 3,  "carb": 33, "protein": 2,  "sodium": 240 },
+    "milk":            { "name": "Milk (10 oz)",             "cal": 160, "fat": 7,  "carb": 16, "protein": 10, "sodium": 160 }
+  },
+  "sides": ["patty", "cheese", "tomato", "lettuce", "onion", "grilled_onion", "spread", "pickle", "chiles"],
+  "salt": {
+    "none":    { "name": "No Salt",      "mult": 0 },
+    "light":   { "name": "Light Salt",   "mult": 0.6 },
+    "regular": { "name": "Regular Salt", "mult": 1 },
+    "extra":   { "name": "Extra Salt",   "mult": 1.3 }
+  },
+  "cook": ["Light", "Regular", "Well Done", "Extra Well Done"],
+  "official": {
+    "hamburger":     { "cal": 360, "fat": 16, "carb": 38, "protein": 16, "sodium": 670 },
+    "cheeseburger":  { "cal": 430, "fat": 21, "carb": 40, "protein": 20, "sodium": 1080 },
+    "double-double": { "cal": 610, "fat": 34, "carb": 42, "protein": 34, "sodium": 1670 },
+    "protein-style": { "cal": 460, "fat": 32, "carb": 13, "protein": 30, "sodium": 1390 },
+    "fries":         { "cal": 360, "fat": 15, "carb": 49, "protein": 6,  "sodium": 150 }
+  }
+}
