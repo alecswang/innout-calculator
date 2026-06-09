@@ -153,7 +153,7 @@ body {
 .extra {
   display: flex; align-items: center; justify-content: space-between;
   border: 1px solid var(--line); border-radius: 12px; padding: 9px 12px;
-  background: #fcfaf6; font-size: .85rem; font-weight: 700; cursor: pointer;
+  background: #fcfaf6; color: var(--ink); font-size: .85rem; font-weight: 700; cursor: pointer;
 }
 .extra.on { background: var(--yellow); border-color: var(--yellow); }
 .extra .ecal { font-size: .72rem; color: #8a8378; font-weight: 600; }
