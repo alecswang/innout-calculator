@@ -3,40 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IN-N-OUT Nutrition Calculator</title>
+  <title>IN-N-OUT 3D · Nutrition Lab</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>" />
-  <link rel="stylesheet" href="style.css?v=10" />
+  <link rel="stylesheet" href="css/style.css?v=1" />
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.js" } }
+  </script>
 </head>
 <body>
+  <canvas id="stage"></canvas>
+  <div class="vignette"></div>
+
+  <div id="loader" class="loader">
+    <div class="loader-burger">🍔</div>
+    <div class="loader-bar"><div id="loaderFill"></div></div>
+    <div class="loader-text">firing up the grill…</div>
+  </div>
+
   <header class="topbar">
     <div class="wordmark">
-      <span class="brand">IN-N-OUT</span>
-      <span class="sub">NUTRITION CALCULATOR</span>
+      <span class="brand">IN-N-OUT <em>3D</em></span>
+      <span class="sub">NUTRITION LAB</span>
     </div>
+    <div class="arrow"></div>
   </header>
 
-  <main class="layout">
-    <!-- LEFT: add items -->
-    <section class="panel builder-panel">
+  <!-- LEFT: menu -->
+  <section class="panel menu-panel" id="menuPanel">
+    <button class="panel-toggle" id="menuToggle">☰ Menu</button>
+    <div class="panel-body">
       <h2 class="panel-title">Burgers</h2>
       <div id="burgers" class="presets"></div>
-
       <h2 class="panel-title">Fries</h2>
       <div id="fries" class="presets"></div>
-
-      <h2 class="panel-title">Drinks &amp; shakes</h2>
+      <h2 class="panel-title">Drinks &amp; Shakes</h2>
       <div id="extras" class="extras"></div>
-
       <h2 class="panel-title">Sides (à la carte)</h2>
       <div id="sides" class="extras"></div>
-    </section>
+    </div>
+  </section>
 
-    <!-- RIGHT: order -->
-    <aside class="panel nutrition-panel">
-      <div class="sheet-close"><button id="sheetCloseBtn" type="button" title="Close">×</button></div>
+  <!-- RIGHT: order + nutrition -->
+  <aside class="panel order-panel" id="orderPanel">
+    <button class="panel-toggle" id="orderToggle">🧾 Order</button>
+    <div class="panel-body">
       <div class="nutri-card">
         <div class="ring-wrap">
-          <div id="macroRing" class="macro-ring">
+          <div id="macroRing" class="macro-ring empty">
             <div class="ring-center">
               <span id="calTotal" class="cal-number">0</span>
               <span class="cal-label">calories</span>
@@ -50,53 +63,36 @@
         </div>
         <div class="sodium-row"><span>Sodium</span><b id="sodiumTotal">0mg</b></div>
       </div>
-
-      <h3 class="break-title">Your order</h3>
+      <h3 class="break-title">Your tray</h3>
       <ul id="order" class="order-list"></ul>
+      <button id="resetBtn" class="reset-btn" type="button">Clear tray</button>
+    </div>
+  </aside>
 
-      <button id="resetBtn" class="reset-btn" type="button">Clear order</button>
-    </aside>
-  </main>
-
-  <footer class="foot">
-    Nutrition derived from official In-N-Out figures (in-n-out.com). Not affiliated with In-N-Out Burgers.
-  </footer>
-
-  <!-- MOBILE CART BAR -->
-  <div id="cartBackdrop" class="cart-backdrop" hidden></div>
-  <div id="cartBar" class="cart-bar">
-    <span class="bar-emoji">🍔</span>
-    <span id="barCount">0 items</span> ·
-    <span id="barCal">0 cal</span>
-    <span class="bar-caret">▲</span>
-  </div>
-
-  <!-- EDIT MODAL -->
-  <div id="modal" class="modal" hidden>
-    <div class="modal-backdrop" data-close></div>
-    <div class="modal-card" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <h3 id="modalTitle">Edit</h3>
-        <button class="modal-x" data-close title="Close">×</button>
-      </div>
+  <!-- BOTTOM: mods drawer for the selected item -->
+  <div id="drawer" class="drawer" hidden>
+    <div class="drawer-head">
+      <h3 id="drawerTitle">Edit</h3>
+      <span id="drawerCal" class="drawer-cal">0 cal</span>
+      <button id="drawerClose" class="drawer-x" title="Close">×</button>
+    </div>
+    <div class="drawer-scroll">
       <div class="seg-group">
         <span class="seg-label">Common mods</span>
         <div id="quickMods" class="seg-row"></div>
       </div>
       <div id="saltGroup" class="seg-group"></div>
       <div id="cookGroup" class="seg-group"></div>
-      <div id="modalBuilder" class="builder"></div>
-      <div class="modal-foot">
-        <span id="modalCal" class="modal-cal">0 cal</span>
-        <button id="doneBtn" class="done-btn" type="button">Done</button>
-      </div>
+      <div id="builderRows" class="builder"></div>
     </div>
   </div>
 
-  <script src="app.js?v=10"></script>
-  <!-- Cloudflare Web Analytics -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-          data-cf-beacon='{"token": "ce942a8ab7c547b882614a273c4e843f"}'></script>
-  <!-- End Cloudflare Web Analytics -->
+  <div class="hint" id="hint">drag to orbit · scroll to zoom · click food to customize</div>
+
+  <footer class="foot">
+    Nutrition derived from official In-N-Out figures (in-n-out.com). Fan project — not affiliated with In-N-Out Burgers.
+  </footer>
+
+  <script type="module" src="js/main.js?v=1"></script>
 </body>
 </html>
