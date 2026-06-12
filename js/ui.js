@@ -102,7 +102,7 @@ export class UI {
         `<span class="oi-name">${name}</span>` +
         `<span class="oi-cal">${Math.round(lt.cal)} cal</span>` +
         (editable
-          ? `<button class="oi-edit" title="Customize">✎ edit</button>`
+          ? `<button class="oi-edit" title="Customize">✎</button>`
           : `<span class="oi-fixed" title="No modifications for this item"></span>`) +
         `<button class="oi-x" title="Remove">×</button>`;
       li.onclick = () => this.h.select(line.id);
