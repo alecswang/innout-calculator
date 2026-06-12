@@ -91,6 +91,7 @@ export class UI {
     }
     for (const line of order) {
       const lt = lineTotals(DATA, line);
+      const editable = line.kind === "food";
       const name =
         line.kind === "food" ? foodName(DATA, line)
         : line.kind === "side" ? "Side of " + DATA.components[line.key].name
@@ -100,8 +101,17 @@ export class UI {
       li.innerHTML =
         `<span class="oi-name">${name}</span>` +
         `<span class="oi-cal">${Math.round(lt.cal)} cal</span>` +
+        (editable
+          ? `<button class="oi-edit" title="Customize">✎ edit</button>`
+          : `<span class="oi-fixed" title="No modifications for this item"></span>`) +
         `<button class="oi-x" title="Remove">×</button>`;
       li.onclick = () => this.h.select(line.id);
+      if (editable) {
+        li.querySelector(".oi-edit").onclick = (e) => {
+          e.stopPropagation();
+          this.h.select(line.id);
+        };
+      }
       li.querySelector(".oi-x").onclick = (e) => {
         e.stopPropagation();
         this.h.removeLine(line.id);
