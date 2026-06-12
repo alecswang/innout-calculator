@@ -60,7 +60,7 @@ export class LayerStack {
         const drop = cinematic ? 0.55 + i * 0.30 : 1.4 + added * 0.5 + i * 0.1;
         l.y = targets[i] + drop;
         l.state = "wait";
-        l.delay = cinematic ? 0.45 + i * 0.14 : 0.05 + added * 0.16;
+        l.delay = cinematic ? 0.2 + i * 0.07 : 0.05 + added * 0.12;
         l.obj.position.y = l.y;
         added++;
         next.push(l);
