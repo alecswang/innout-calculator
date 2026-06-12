@@ -13,8 +13,9 @@ class Layer {
     this.obj = obj;          // wrapper group, local to the view
     this.target = target;    // resting local y
     this.y = target;
+    this.x = 0;              // sideways offset (slide-in insertions)
     this.vel = 0;
-    this.state = "idle";     // wait | fall | move | idle | eject
+    this.state = "idle";     // wait | fall | slide | move | idle | eject
     this.delay = 0;
     this.squash = 0;
     this.bounced = false;
@@ -40,6 +41,7 @@ export class LayerStack {
       oldByKey.get(l.key).push(l);
     }
     const next = [];
+    const isNew = [];
     let added = 0;
     keys.forEach((key, i) => {
       const pool = oldByKey.get(key);
@@ -48,6 +50,7 @@ export class LayerStack {
         l.target = targets[i];
         if (l.state === "idle" && Math.abs(l.y - l.target) > 1e-4) l.state = "move";
         next.push(l);
+        isNew.push(false);
       } else {
         const obj = makeObj(key);
         this.group.add(obj);
@@ -61,8 +64,23 @@ export class LayerStack {
         l.obj.position.y = l.y;
         added++;
         next.push(l);
+        isNew.push(true);
       }
     });
+    // a new layer with settled layers ABOVE it can't fall through the stack —
+    // it slides in from the side while the stack lifts to make room
+    for (let i = 0; i < next.length; i++) {
+      if (!isNew[i]) continue;
+      const hasOldAbove = isNew.slice(i + 1).some((n) => !n);
+      if (!hasOldAbove) continue;
+      const l = next[i];
+      l.state = "slide";
+      l.delay = 0;
+      l.x = (Math.random() < 0.5 ? -1 : 1) * 1.8;
+      l.y = l.target + 0.16;
+      l.obj.position.x = l.x;
+      l.obj.position.y = l.y;
+    }
     // anything left over flies off the stack
     for (const pool of oldByKey.values())
       for (const l of pool) {
@@ -82,12 +100,28 @@ export class LayerStack {
 
   update(dt) {
     const tmp = new THREE.Vector3();
-    for (const l of this.layers) {
+    // while something slides in, every layer above it lifts to make room
+    let slideIdx = Infinity;
+    this.layers.forEach((l, i) => {
+      if (l.state === "slide" && i < slideIdx) slideIdx = i;
+    });
+    this.layers.forEach((l, idx) => {
+      const eff = l.target + (idx > slideIdx ? 0.42 : 0);
+      if (l.state === "idle" && Math.abs(eff - l.y) > 0.004) l.state = "move";
       switch (l.state) {
         case "wait":
           l.delay -= dt;
           if (l.delay <= 0) { l.state = "fall"; l.vel = 0; }
           break;
+        case "slide": {
+          l.x += (0 - l.x) * (1 - Math.exp(-dt * 5.5));
+          if (Math.abs(l.x) < 0.05) {
+            l.x = 0;
+            l.state = "fall";
+            l.vel = 0;
+          }
+          break;
+        }
         case "fall": {
           l.vel -= G * dt;
           l.y += l.vel * dt;
@@ -121,10 +155,10 @@ export class LayerStack {
         }
         case "move": {
           const k = 90, c = 13;
-          l.vel += (l.target - l.y) * k * dt - l.vel * c * dt;
+          l.vel += (eff - l.y) * k * dt - l.vel * c * dt;
           l.y += l.vel * dt;
-          if (Math.abs(l.target - l.y) < 0.002 && Math.abs(l.vel) < 0.02) {
-            l.y = l.target;
+          if (Math.abs(eff - l.y) < 0.002 && Math.abs(l.vel) < 0.02) {
+            l.y = eff;
             l.vel = 0;
             l.state = "idle";
           }
@@ -132,10 +166,11 @@ export class LayerStack {
         }
       }
       l.squash = Math.max(0, l.squash - dt * 1.9);
+      l.obj.position.x = l.x;
       l.obj.position.y = l.y;
       const s = l.squash;
       l.obj.scale.set(1 + s * 0.55, 1 - s, 1 + s * 0.55);
-    }
+    });
 
     for (let i = this.ejecting.length - 1; i >= 0; i--) {
       const l = this.ejecting[i];
@@ -564,6 +599,7 @@ export class TrayScene {
         // assembly finished — glide down to a hero shot of the result
         const h = v.heroFocus();
         this.stage.focus(h.point, h.dist);
+        this.onSettled?.(this.pendingFocusId);
         this.pendingFocusId = null;
       }
     }

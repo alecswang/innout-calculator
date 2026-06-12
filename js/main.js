@@ -10,6 +10,7 @@ let DATA = null;
 let order = [];
 let nextId = 1;
 let selectedId = null;
+let assemblingId = null; // drawer stays closed for this line until it settles
 
 let stage, tray, ui;
 
@@ -24,11 +25,16 @@ function loadSaved() {
   return null;
 }
 
+function drawerLine() {
+  const line = order.find((l) => l.id === selectedId);
+  return line && line.id !== assemblingId ? line : null;
+}
+
 function refresh({ cinematicId = null } = {}) {
   tray.sync(order, DATA, { cinematicId });
   ui.renderTotals(orderTotals(DATA, order));
   ui.renderOrder(order, selectedId);
-  ui.renderDrawer(order.find((l) => l.id === selectedId) || null);
+  ui.renderDrawer(drawerLine());
   save();
 }
 
@@ -36,7 +42,7 @@ function select(id, opts) {
   selectedId = id;
   tray.select(id, opts);
   ui.renderOrder(order, selectedId);
-  ui.renderDrawer(order.find((l) => l.id === selectedId) || null);
+  ui.renderDrawer(drawerLine());
 }
 
 const handlers = {
@@ -44,6 +50,7 @@ const handlers = {
     const p = DATA.presets[key];
     const line = { id: nextId++, kind: "food", cat: p.cat, preset: key, items: { ...p.items }, salt: "regular" };
     if (p.cat === "fries") line.cook = "Regular";
+    assemblingId = line.id;
     order.push(line);
     refresh({ cinematicId: line.id });
     select(line.id, { focus: false });
@@ -61,6 +68,7 @@ const handlers = {
   },
   removeLine(id) {
     order = order.filter((l) => l.id !== id);
+    if (assemblingId === id) assemblingId = null;
     if (selectedId === id) select(null);
     refresh();
   },
@@ -68,6 +76,7 @@ const handlers = {
   change() { refresh(); },
   clear() {
     order = [];
+    assemblingId = null;
     select(null);
     refresh();
   },
@@ -84,6 +93,12 @@ async function boot() {
 
   tray = new TrayScene(stage);
   ui = new UI(DATA, handlers);
+  // the mods drawer waits for the assembly to finish so it never covers it
+  tray.onSettled = (id) => {
+    if (assemblingId !== id) return;
+    assemblingId = null;
+    ui.renderDrawer(drawerLine());
+  };
   window.__dbg = { stage, tray };
 
   const saved = loadSaved();

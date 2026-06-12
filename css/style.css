@@ -242,6 +242,7 @@ html, body {
   display: flex; flex-direction: column;
   animation: rise .3s cubic-bezier(.2, .9, .3, 1.2);
 }
+.drawer[hidden] { display: none; }
 @keyframes rise { from { transform: translate(-50%, 24px); opacity: 0; } }
 .drawer-head {
   display: flex; align-items: center; gap: 12px;
